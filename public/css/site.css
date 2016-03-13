@@ -1,0 +1,8 @@
+.search-container {
+    width: 300px;
+    margin: 25px auto;
+}
+
+.search-container input[type=text] {
+    margin-bottom: 1px;
+}
