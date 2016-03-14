@@ -12,23 +12,67 @@ var yelpController = function() {
         }
     });
     
-    this.search = function(req, res) {
-        var query = req.query;
-        
-        if (!query.hasOwnProperty("area") || !query.hasOwnProperty("find")) {
-            res.send({error: "Must send info for find and area"});
+    this.sendBlankOrUserPage = function(req, res) {
+        if (!req.isAuthenticated()) {
+            res.render("index", { isAuthenticated: false,hasHomeSearchArea: false });
             return;
         }
         
-        var search = query.find;
-        var area = query.area;
+        var user = req.user;
+        
+        var hasHomeSearchArea = (user.homeSearchArea !== undefined && user.homeSearchArea.length > 0);
+        
+        res.render("index", {isAuthenticated: true, hasHomeSearchArea: hasHomeSearchArea});
+    }
     
+    var search = function(area, business, callback) {
         client.search({
-            term: search,
+            term: business,
             location: area
         })
         .then(function(data) {
-           res.json(data.businesses);
+           callback(data.businesses);
+        });
+    }
+    
+    this.apiSearch = function(req, res) {
+        var query = req.query;
+        
+        if (req.isAuthenticated())
+            console.log(req.user.homeSearchArea);
+        
+        var isMissingCriteria = (!query.hasOwnProperty("area") || !query.hasOwnProperty("find"));
+        var hasHomeSearchArea = (req.hasOwnProperty('user[homeSearchArea]')) ? true : false;
+        
+        if (isMissingCriteria && !hasHomeSearchArea) {
+            res.send({error: "Must send info for find and area"});
+            return;
+        } 
+        
+        var business = query.find;
+        console.log(query.area);
+        var area = (query.area !== "undefined") ? query.area : req.user.homeSearchArea;
+        
+        
+        if (req.isAuthenticated() && area !== req.user.homeSearchArea)
+            setUserSearch(req.user._id, area);
+    
+        search(area, business, function(data) {
+            res.json(data);
+        });
+    }
+    
+    var setUserSearch = function(userId, area) {
+        if (area === "undefined")
+            return;
+            
+        console.log('setting search of ' + area);
+        
+        User.findById(userId, function(err, user) {
+            if (err) throw err;
+            
+            user.homeSearchArea = area;
+            user.save();
         });
     }
     

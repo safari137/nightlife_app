@@ -1,5 +1,6 @@
 $("#findBars").on('click', function() {
-    findAndLoadBars();
+    var area = $("#location").val();
+    findAndLoadBars(area);
 });
 
 $(".locations").on('click', "button", function() {
@@ -7,11 +8,12 @@ $(".locations").on('click', "button", function() {
     sendAttendingPost(id);
 });
 
+checkAutoSearch();
+
 var barData = [];
 var barAtendees = [];
 
-function findAndLoadBars() {
-    var area = $("#location").val();
+function findAndLoadBars(area) {
     $.get("/api/search/?find=bar&area=" + area, function(data) {
        data.forEach(function(business, index, arr) {
             barData[index] = { name: business.name, img: business.image_url, snippet: business.snippet_text, id: business.id };
@@ -77,5 +79,13 @@ function updateAndDisplayAtendees() {
            tryDisplayBars(false);
         });
     });
+}
+
+function checkAutoSearch() {
+    var search = $("#hasHomeSearchArea").val();
+    
+    if (search === 'false') return;
+    
+    findAndLoadBars(undefined);
 }
 

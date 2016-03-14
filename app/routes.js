@@ -9,9 +9,7 @@ function routes(app, passport) {
     userController = new userController(passport);
     
     app.route("/")
-        .get(function(req, res) {
-            res.render("index", {isAuthenticated: req.isAuthenticated()});
-        });
+        .get(yelpController.sendBlankOrUserPage);
         
     app.route("/login")
         .get(userController.startLogin)
@@ -25,7 +23,7 @@ function routes(app, passport) {
         .get(userController.logout);
     
     app.route("/api/search")
-        .get(yelpController.search);
+        .get(yelpController.apiSearch);
         
     app.route("/api/attending/:id")
         .get(yelpController.getUsersAttending)
