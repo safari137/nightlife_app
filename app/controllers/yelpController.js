@@ -35,22 +35,25 @@ var yelpController = function() {
     this.markAttending = function(req, res) {
         var eventId = req.params.id;
             
-        User.findOne({email: req.params.user}, function(err, user) {
+        User.findOne({_id: req.user._id}, function(err, user) {
            if (err) throw err;
            
-           user.attending = eventId;
+           user.attending.id = eventId;
+           user.attending.date = Date.now();
            user.save();
-           res.send(user);
+           res.end();
         });
     }
     
     this.getUsersAttending = function(req, res) {
         var eventId = req.params.id;
         
-        User.find({attending: eventId}, function(err, users) {
+        User.find({"attending.id" : eventId}, function(err, users) {
            if (err) throw err;
-           
-           res.send(users.map(function(user) {
+
+           res.send(users.filter(function(value) {
+               return (isSameDay(value.attending.date, Date.now()))
+           }).map(function(user) {
                 return { email: user.email }; 
            }));
         });
@@ -58,3 +61,10 @@ var yelpController = function() {
 }
 
 module.exports = yelpController;
+
+function isSameDay(day1, day2) {
+    var timeDifference = day2 - day1;
+    var hours = timeDifference/3600000;
+    
+    return (hours < 24)
+}

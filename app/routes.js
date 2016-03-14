@@ -28,10 +28,8 @@ function routes(app, passport) {
         .get(yelpController.search);
         
     app.route("/api/attending/:id")
-        .get(yelpController.getUsersAttending);
-    
-    app.route("/api/:user/attending/:id") 
-        .get(isLoggedIn, yelpController.markAttending)
+        .get(yelpController.getUsersAttending)
+        .post(isLoggedIn, yelpController.markAttending);
         
     app.route("/*")
         .get(function(req, res) {
