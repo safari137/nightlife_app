@@ -34,7 +34,13 @@ var yelpController = function() {
     
     this.markAttending = function(req, res) {
         var eventId = req.params.id;
-            
+        
+        if (!req.isAuthenticated()) {
+            res.writeHead(400, { 'Content-Type': 'application/json' }); 
+            res.end(JSON.stringify({ "error" : "You must be logged in.", "id" : eventId ,"status" : 400 }));
+            return;
+        }
+        
         User.findOne({_id: req.user._id}, function(err, user) {
            if (err) throw err;
            

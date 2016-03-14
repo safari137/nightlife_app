@@ -10,7 +10,7 @@ function routes(app, passport) {
     
     app.route("/")
         .get(function(req, res) {
-            res.render("index");
+            res.render("index", {isAuthenticated: req.isAuthenticated()});
         });
         
     app.route("/login")
@@ -29,7 +29,7 @@ function routes(app, passport) {
         
     app.route("/api/attending/:id")
         .get(yelpController.getUsersAttending)
-        .post(isLoggedIn, yelpController.markAttending);
+        .post(yelpController.markAttending);
         
     app.route("/*")
         .get(function(req, res) {
