@@ -63,6 +63,24 @@
     background: #f2dede;
 }
 
+.form-container {
+    width: 50%;
+    border: solid 2px black;
+    margin: 25px auto;
+    padding: 20px;
+    background: #eee;
+}
+
+.info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.footer {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
 body {
     background: #ddd;
 }
