@@ -43,8 +43,8 @@ function tryDisplayBars() {
     for (var i = 0; i < barData.length; i++) {
         
         var html = "<div class='bordered row'>" +
-                   "<div class='col-lg-1 col-md-2'><img class='img' src='" + barData[i].img + "'></div>" +
-                   "<div class='col-lg-11 col-md-10'>" +
+                   "<div class='col-lg-1 col-md-2 col-sm-4 text-center'><img class='img' src='" + barData[i].img + "'></div>" +
+                   "<div class='col-lg-11 col-md-10 col-sm-8'>" +
                    "<div class='location-title'>" + barData[i].name + "<button class='btn btn-success btn-xs' " + "id='" + barData[i].id + "'>" + barAtendees[i] + " Going</button></div>" +
                    "<div class='location-snippet'>\"" + barData[i].snippet + "\"</div></div></div>";
                    

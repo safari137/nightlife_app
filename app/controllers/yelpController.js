@@ -38,8 +38,16 @@ var yelpController = function() {
         User.findOne({_id: req.user._id}, function(err, user) {
            if (err) throw err;
            
-           user.attending.id = eventId;
-           user.attending.date = Date.now();
+           var userAlreadyAttending =  (user.attending.id === eventId);
+           var noLongerAttending = { id: "", date: Date.now() };
+           
+           if (userAlreadyAttending) {
+               user.attending = noLongerAttending;
+           } else {
+               user.attending.id = eventId;
+               user.attending.date = Date.now();
+           }
+           
            user.save();
            res.end();
         });
